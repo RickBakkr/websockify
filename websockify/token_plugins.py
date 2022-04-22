@@ -176,6 +176,7 @@ class TokenRedis():
             # import those ahead of time so we provide error earlier
             import redis
             self._server, self._port = src.split(":")
+            self._client = redis.Redis(host=self._server, port=self._port)
             logger.info("TokenRedis backend initilized (%s:%s)" %
                   (self._server, self._port))
         except ValueError:
@@ -187,15 +188,8 @@ class TokenRedis():
             sys.exit()
 
     def lookup(self, token):
-        try:
-            import redis
-        except ImportError:
-            logger.error("package redis not found, are you sure you've installed them correctly?")
-            sys.exit()
-
         logger.info("resolving token '%s'" % token)
-        client = redis.Redis(host=self._server, port=self._port)
-        stuff = client.get(token)
+        stuff = self._client.get(token)
         if stuff is None:
             return None
         else:
