@@ -301,3 +301,91 @@ class TokenRedisTestCase(unittest.TestCase):
         self.assertEqual(plugin._password, 'verysecret')
         mock_redis.assert_called_once_with(host='127.0.0.1', port=1234,
                                            db=2, password='verysecret')
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_empty_db_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1:::verysecret')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 0)
+        self.assertEqual(plugin._password, 'verysecret')
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=0, password='verysecret')
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_empty_db_empty_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1:::')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 0)
+        self.assertEqual(plugin._password, None)
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=0, password=None)
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_empty_db_no_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1::')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 0)
+        self.assertEqual(plugin._password, None)
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=0, password=None)
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_no_db_no_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1:')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 0)
+        self.assertEqual(plugin._password, None)
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=0, password=None)
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_db_no_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1::2')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 2)
+        self.assertEqual(plugin._password, None)
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=2, password=None)
+
+    @patch('redis.Redis')
+    def test_src_with_host_port_empty_db_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1:1234::verysecret')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 1234)
+        self.assertEqual(plugin._db, 0)
+        self.assertEqual(plugin._password, 'verysecret')
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=1234,
+                                           db=0, password='verysecret')
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_db_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1::2:verysecret')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 2)
+        self.assertEqual(plugin._password, 'verysecret')
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=2, password='verysecret')
+
+    @patch('redis.Redis')
+    def test_src_with_host_empty_port_db_empty_pass(self, mock_redis):
+        plugin = TokenRedis('127.0.0.1::2:')
+
+        self.assertEqual(plugin._server, '127.0.0.1')
+        self.assertEqual(plugin._port, 6379)
+        self.assertEqual(plugin._db, 2)
+        self.assertEqual(plugin._password, None)
+        mock_redis.assert_called_once_with(host='127.0.0.1', port=6379,
+                                           db=2, password=None)
